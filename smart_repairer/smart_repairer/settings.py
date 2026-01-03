@@ -136,3 +136,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # --- Razorpay Configuration ---
+# --- ADD THIS FOR DEPLOYMENT ---
+import os
+
+# This tells Django where to collect all static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
