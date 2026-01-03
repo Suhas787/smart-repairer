@@ -3,7 +3,7 @@ Django settings for smart_repairer project.
 """
 
 from pathlib import Path
-import os  # ✅ Moved to top for cleaner code
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,18 +14,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==========================================
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# (It falls back to the insecure key if the environment variable isn't set)
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-a!y1vy9(9ley3-ek62r@g=!d=ee2#l)r%6k_=_g0&j(zzn+^)(')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# ✅ This automatically detects if you are on Render. 
-# If on Render -> DEBUG is False. If on Laptop -> DEBUG is True.
+# ✅ Detects if running on Render. If on Render -> DEBUG is False.
 DEBUG = 'RENDER' not in os.environ
 
-# ✅ Allow the app to run on Render's web address
+# ✅ Allow all hosts so Render works
 ALLOWED_HOSTS = ['*']
 
-# ✅ Fixes "CSRF Failed" errors on Render login pages
+# ✅ Fixes Login/CSRF errors on Render
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
 
@@ -50,7 +48,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware', # Optional: Add if using WhiteNoise later
+    'whitenoise.middleware.WhiteNoiseMiddleware', # ✅ Best for serving static files on Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,7 +63,7 @@ ROOT_URLCONF = 'smart_repairer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # ✅ Ensures Django finds your HTML files
+        'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,8 +80,6 @@ WSGI_APPLICATION = 'smart_repairer.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -93,8 +89,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -112,8 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -126,14 +118,21 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Where your local static files live (CSS/Images during development)
+# Where your local static files live
 STATICFILES_DIRS = [BASE_DIR / 'repair' / 'static']
 
-# ✅ Where Django collects files for Deployment (Critical for Render)
+# ✅ Where Django collects files for Deployment
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# ✅ Enable WhiteNoise to serve files efficiently
+try:
+    import whitenoise
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+except ImportError:
+    pass # Fallback if whitenoise isn't installed
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Media Files (User uploaded images like tire punctures)
+# Media Files (User uploaded images)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
