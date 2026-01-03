@@ -1,0 +1,108 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Repairer Dashboard</h2>
+    
+    <div class="request-section">
+        <h3>🚨 New Available Jobs</h3>
+        
+        {% if express_jobs or priority_jobs or basic_jobs %}
+            <div class="card-grid">
+                
+                {% for job in express_jobs %}
+                    <div class="request-card status-pending priority-express">
+                        <h4>🚨 EXPRESS: {{ job.issue_description }}</h4>
+                        <p><b>Vehicle:</b> {{ job.driver.vehicle_number }}</p>
+                        <p><b>Location:</b> <a href="https://www.google.com/maps?q={{ job.location }}" target="_blank">View Map 📍</a></p>
+                        
+                        <a href="{% url 'accept_request' job.id %}" class="btn btn-primary btn-accept">Accept Job</a>
+                    </div>
+                {% endfor %}
+
+                {% for job in priority_jobs %}
+                    <div class="request-card status-pending priority-priority">
+                        <h4>⚠️ PRIORITY: {{ job.issue_description }}</h4>
+                        <p><b>Vehicle:</b> {{ job.driver.vehicle_number }}</p>
+                        <p><b>Location:</b> <a href="https://www.google.com/maps?q={{ job.location }}" target="_blank">View Map 📍</a></p>
+                        
+                        <a href="{% url 'accept_request' job.id %}" class="btn btn-primary btn-accept">Accept Job</a>
+                    </div>
+                {% endfor %}
+
+                {% for job in basic_jobs %}
+                    <div class="request-card status-pending priority-basic">
+                        <h4>🛠️ BASIC: {{ job.issue_description }}</h4>
+                        <p><b>Vehicle:</b> {{ job.driver.vehicle_number }}</p>
+                        <p><b>Location:</b> <a href="https://www.google.com/maps?q={{ job.location }}" target="_blank">View Map 📍</a></p>
+                        
+                        <a href="{% url 'accept_request' job.id %}" class="btn btn-primary btn-accept">Accept Job</a>
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <p class="empty-message">No new repair requests available right now.</p>
+        {% endif %}
+    </div>
+
+    <hr style="margin: 40px 0; border-top: 2px solid #eee;">
+
+    <div class="request-section">
+        <h3>✅ My Active Jobs</h3>
+
+        {% if my_active_jobs %}
+            <div class="card-grid">
+                {% for job in my_active_jobs %}
+                <div class="request-card status-{{ job.status|lower }}">
+
+                    {% if job.problem_image %}
+                        <img src="{{ job.problem_image.url }}" alt="Problem Photo" class="problem-image">
+                    {% endif %}
+
+                    <h4>{{ job.issue_description }}</h4>
+
+                    <p class="highlight-status">
+                        Status: <span>{{ job.status }}</span>
+                    </p>
+
+                    <p><b>Driver:</b> {{ job.driver.user.username }}</p>
+                    <p class="highlight-contact">📞 Contact Driver: {{ job.driver.phone }}</p>
+
+                    <a href="https://www.google.com/maps?q={{ job.location }}" 
+                       target="_blank" 
+                       class="map-link">
+                       View on Map 📍
+                    </a>
+
+                    <p class="payment-note">
+                        <b>Note:</b> Collect your payment for the repair directly from the driver (cash/UPI).
+                    </p>
+
+                    <div class="dashboard-actions">
+                        {% if job.status == 'Accepted' %}
+                            <form method="POST" action="{% url 'start_job' job.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary btn-start">
+                                    Start Job / On My Way
+                                </button>
+                            </form>
+
+                        {% elif job.status == 'In Progress' %}
+                            <a href="{% url 'finalize_job' job.id %}" class="btn btn-primary btn-accept">
+                                Finalize Job & Send Bill
+                            </a>
+                        {% endif %}
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-message">You have no active jobs. Accept a job from above to see it here!</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

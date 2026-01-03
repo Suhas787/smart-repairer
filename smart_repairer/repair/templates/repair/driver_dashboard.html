@@ -1,0 +1,122 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container centered-dashboard">
+
+    <div class="dashboard-hero">
+        <img src="{% static 'images/partner_3.png' %}" alt="Partner Logo">
+    </div>
+
+    <div class="dashboard-header">
+        <a href="{% url 'create_request' %}" class="btn btn-primary btn-large">Request Emergency Help Now</a>
+    </div>
+
+    <div class="request-section">
+        <h3>My Active Requests</h3>
+        
+        {% if not active_requests %}
+            <p class="empty-message">You have no active repair requests.</p>
+        {% endif %}
+
+        <div class="card-grid">
+            {% for req in active_requests %}
+                <div class="request-card">
+                    
+                    {% if req.problem_image %}
+                        <img src="{{ req.problem_image.url }}" alt="Problem Photo" class="problem-image">
+                    {% endif %}
+                    
+                    <h4>{{ req.issue_description }}</h4>
+                    
+                    {% if req.status == 'Unpaid' %}
+                        <p class="highlight-status">
+                            Status: <span class="status-unpaid">Awaiting Payment</span>
+                        </p>
+                        <p>You must pay the priority fee to activate this request.</p>
+                        <a href="{% url 'dummy_payment' req.id %}" class="btn btn-primary">Pay Now to Activate</a>
+                    
+                    {% else %}
+                        <p class="highlight-status">
+                            Status: <span class="status-{{ req.status|lower }}">{{ req.status }}</span>
+                        </p>
+                        <p>
+                            <a href="https://www.google.com/maps?q={{ req.location }}" 
+                               target="_blank" 
+                               class="map-link">
+                                View on Map 📍
+                            </a>
+                        </p>
+                        
+                        {% if req.repairer %}
+                            <p>Accepted by: <b>{{ req.repairer.workshop_name }}</b></p>
+                            <p class="highlight-contact">
+                                📞 Contact: {{ req.repairer.phone }}
+                            </p>
+                            <p class="payment-note"><b>Note:</b> Please pay the repairer directly (in cash or UPI) for their service.</p>
+                        {% else %}
+                            <p>Waiting for a repairer to accept...</p>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <small>Requested on: {{ req.created_at|date:"d M Y, h:i A" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="request-section">
+        <h3>My Repair History</h3>
+    
+        {% if not completed_requests %}
+            <p class="empty-message">You have no completed repairs.</p>
+        {% endif %}
+
+        <div class="card-grid">
+            {% for req in completed_requests %}
+                <div class="request-card history">
+                    
+                    {% if req.problem_image %}
+                        <img src="{{ req.problem_image.url }}" alt="Problem Photo" class="problem-image">
+                    {% endif %}
+                    
+                    <h4>{{ req.issue_description }}</h4>
+                    <p>Status: <span class="status-completed">{{ req.status }}</span></p>
+                    <p>Repaired by: {{ req.repairer.workshop_name }}</p>
+                    
+                    <p><b>Final Bill: ₹{{ req.final_bill_amount }}</b></p>
+                    
+                    {% if req.rating %}
+                        <p class="star-rating">Your Rating: {{ req.rating }} ⭐</p>
+                    {% else %}
+                        <a href="{% url 'leave_review' req.id %}" class="btn btn-primary" style="margin-top: 10px;">
+                            Leave a Review
+                        </a>
+                    {% endif %}
+                    
+                    <small>Completed on: {{ req.created_at|date:"d M Y" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="request-section">
+        <h3>Recent Reviews from Drivers</h3>
+        <div class="card-grid testimonial-grid">
+            <div class="testimonial-card">
+                <p>"Fast service! The repairer (Quick Parts Co) arrived in 20 minutes and fixed my tire. Lifesaver!"</p>
+                <small>- John D.</small>
+            </div>
+            <div class="testimonial-card">
+                <p>"The location tracking was perfect. I didn't even have to give directions. 10/10."</p>
+                <small>- Sarah K.</small>
+            </div>
+            <div class="testimonial-card">
+                <p>"My engine stalled and I used this app. A repairer accepted in 2 minutes. Very reliable."</p>
+                <small>- Mike L.</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

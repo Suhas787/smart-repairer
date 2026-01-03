@@ -1,0 +1,63 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="hero">
+    <img src="{% static 'images/colorful_vehicle_logo.png' %}" alt="Smart Repairer Logo" class="hero-logo">
+    <h1>Welcome to Smart Repairer Network</h1>
+    <p>Fast, Reliable & Connected Truck and Vehicle Repair Solutions</p>
+    <a href="{% url 'register' %}" class="btn">Get Started</a>
+</section>
+
+<section id="services" class="services">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+
+        <a href="{% url 'register' %}" class="card-link">
+            <div class="card">
+                <img src="{% static 'images/truck_repair_card.png' %}" alt="Truck Repair Services">
+                <h3>Truck Repair</h3>
+                <p>Connect instantly with verified repairers nearby.</p>
+            </div>
+        </a>
+
+        <a href="{% url 'register' %}" class="card-link">
+            <div class="card">
+                <img src="https://cdn-icons-png.flaticon.com/512/1067/1067566.png" alt="Driver Support">
+                <h3>Driver Support</h3>
+                <p>24/7 support for breakdowns and emergencies.</p>
+            </div>
+        </a>
+
+        <a href="{% url 'register' %}" class="card-link">
+            <div class="card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3500/3500833.png" alt="Workshop Management">
+                <h3>Workshop Management</h3>
+                <p>Track and manage service requests seamlessly.</p>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+<section id="stats" class="stats-section">
+    <div class="stat-item">
+        <h2 class="stat-number" data-target="1245">0</h2>
+        <p>Drivers Helped</p>
+    </div>
+    <div class="stat-item">
+        <h2 class="stat-number" data-target="860">0</h2>
+        <p>Repairs Completed</p>
+    </div>
+    <div class="stat-item">
+        <h2 class="stat-number" data-target="160">0</h2>
+        <p>Verified Workshops</p>
+    </div>
+    <div class="stat-item">
+        <h2 class="stat-number" data-target="24">0</h2>
+        <p>Hours Support</p>
+    </div>
+</section>
+
+{% endblock %}

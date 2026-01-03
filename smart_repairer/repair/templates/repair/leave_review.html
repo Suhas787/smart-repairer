@@ -1,0 +1,29 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Leave a Review</h2>
+    <p>How was your experience with <strong>{{ job.repairer.workshop_name }}</strong>?</p>
+    <p><strong>Job:</strong> {{ job.issue_description }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label for="rating">Rating (1-5 Stars):</label>
+        <select name="rating" id="rating" class.form-file-input" required>
+            <option value="">Choose a rating...</option>
+            <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+            <option value="4">⭐⭐⭐⭐ (Good)</option>
+            <option value="3">⭐⭐⭐ (Okay)</option>
+            <option value="2">⭐⭐ (Bad)</option>
+            <option value="1">⭐ (Very Bad)</option>
+        </select>
+
+        <label for="review_comment">Your Review (Optional):</label>
+        <textarea name="review_comment" id="review_comment" rows="4" placeholder="Tell us what you liked or disliked..."></textarea>
+        
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+</div>
+{% endblock %}

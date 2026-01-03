@@ -1,0 +1,23 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Confirm Your Service Payment</h2>
+    <p>You have selected the <strong>"{{ job.priority }}"</strong> package. Please confirm the service fee to activate your request.</p>
+
+    <div class="summary-card">
+        <strong>Total Service Fee:</strong>
+        <span class="payment-amount">₹{{ amount_rupees }}</span>
+    </div>
+
+    <form method="POST" action="{% url 'payment_success' job.id %}">
+        {% csrf_token %}
+        <button type="submit" class.btn btn-large">Confirm & Pay (Demo)</button>
+    </form>
+    
+    <p style="margin-top: 20px; color: #777;">
+        <small>This is a demo. No real money will be charged.</small>
+    </p>
+</div>
+{% endblock %}

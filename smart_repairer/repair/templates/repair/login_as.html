@@ -1,0 +1,24 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="register-container">
+    <h2>Login as</h2>
+    
+    <div class="role-selection">
+    <a href="{% url 'login_form' %}?role=driver" class="role-card">
+        <img src="{% static 'images/driver_icon.png' %}" alt="Driver Icon">
+        <h3>Driver</h3>
+    </a>
+    
+    <a href="{% url 'login_form' %}?role=repairer" class="role-card">
+        <img src="{% static 'images/repairer_icon.png' %}" alt="Repairer Icon">
+        <h3>Repairer</h3>
+    </a>
+</div>
+
+    <p class="login-link" style="margin-top: 30px;">
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    </p>
+</div>
+{% endblock %}

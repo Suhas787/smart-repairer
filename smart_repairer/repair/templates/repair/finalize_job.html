@@ -1,0 +1,18 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Finalize & Complete Job</h2>
+    <p>Please enter the total amount (in ₹) you collected from the driver for this job.</p>
+    <p><strong>Job:</strong> {{ job.issue_description }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="final_bill_amount">Total Bill Amount (in ₹):</label>
+        <input type.number" name="final_bill_amount" id="final_bill_amount" step="0.01" placeholder="e.g., 1500.50" required>
+        
+        <button type="submit" class="btn btn-primary">Submit & Complete Job</button>
+    </form>
+</div>
+{% endblock %}

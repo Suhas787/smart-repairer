@@ -1,0 +1,86 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="login-container request-page">
+    <h2>Request Emergency Help</h2>
+    <p>Please describe your issue and choose your service level.</p>
+
+    <form method="POST" id="request-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label for="issue_description">Describe your issue:</label>
+        <textarea name="issue_description" id="issue_description" rows="4" placeholder="e.g., 'Flat tire', 'Engine smoking'" required></textarea>
+        
+        <label for="problem-image">Upload Problem Image (Optional):</label>
+        <input type="file" name="problem_image" id="problem-image" accept="image/*" class="form-file-input">
+
+        <input type="hidden" name="location" id="location-field">
+        
+        <label>Choose your service level:</label>
+        <div class="package-options-grid">
+            
+            <label class="package-card">
+                <input type="radio" name="priority" value="Basic" checked>
+                <div class="package-info">
+                    <strong>Basic Request</strong>
+                    <p>Added to the standard job queue.</p>
+                    <span class="price-tag">Standard Rate</span>
+                </div>
+            </label>
+
+            <label class="package-card priority">
+                <input type="radio" name="priority" value="Priority">
+                <div class="package-info">
+                    <strong>Priority Request</strong>
+                    <p>Your job is placed above all "Basic" requests.</p>
+                    <span class="price-tag">Standard Rate + ₹100 Fee</span>
+                </div>
+            </label>
+
+            <label class="package-card express">
+                <input type="radio" name="priority" value="Express">
+                <div class="package-info">
+                    <strong>🚀 Express Request</strong>
+                    <p>Your job is at the very top of the job board!</p>
+                    <span class="price-tag">Standard Rate + ₹250 Fee</span>
+                </div>
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-large" id="submit-btn" disabled>Submit Request</button>
+        
+        <p id="location-status" style="margin-top: 15px; color: #555;">Fetching your location...</p>
+    </form>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        const locationField = document.getElementById('location-field');
+        const statusText = document.getElementById('location-status');
+        const submitBtn = document.getElementById('submit-btn');
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    locationField.value = `${lat}, ${lon}`;
+                    statusText.innerHTML = "✅ Location found!";
+                    statusText.style.color = "green";
+                    submitBtn.disabled = false; 
+                },
+                (error) => {
+                    statusText.innerHTML = "Error: Could not get location. Please enable location services in your browser.";
+                    statusText.style.color = "red";
+                    submitBtn.disabled = true; 
+                }
+            );
+        } else {
+            statusText.innerHTML = "Error: Geolocation is not supported by your browser.";
+            statusText.style.color = "red";
+            submitBtn.disabled = true;
+        }
+    });
+</script>
+{% endblock %}

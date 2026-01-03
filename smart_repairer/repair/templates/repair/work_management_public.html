@@ -1,0 +1,90 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container centered-dashboard" style="text-align: left;">
+
+    <div class="dashboard-header" style="border-bottom: 2px solid #004aad; margin-bottom: 30px; padding-bottom: 10px;">
+        <h2 style="font-size: 2.5em;">Our Work Management</h2>
+        <p style="font-size: 1.2em; color: #555;">
+            We are dedicated to connecting drivers with fast, reliable repair services. 
+            Here is a summary of our impact.
+        </p>
+    </div>
+
+    <div class="request-section">
+        <h3>Our Growth (Repairs per Year)</h3>
+        <div class="chart-container">
+            <canvas id="myYearlyChart"></canvas>
+        </div>
+    </div>
+
+    <div class="request-section">
+        <h3>Driver Feedback</h3>
+        <div class="review-list">
+            {% if not reviews %}
+                <p class="empty-message">No reviews available yet.</p>
+            {% endif %}
+            
+            {% for review in reviews %}
+                <div class="review-card">
+                    <p class="star-rating">{{ review.rating }} ⭐</p>
+                    <p>"{{ review.review_comment }}"</p>
+                    <small>From: {{ review.driver.user.username }} (Repaired by: {{ review.repairer.workshop_name }})</small>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="request-section" style="text-align: center; margin-top: 40px;">
+        <h2>Ready to Join?</h2>
+        <p style="font-size: 1.1em; color: #555;">Register today as a driver or a repairer and join our growing network!</p>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-large" style="margin-top: 20px;">
+            Join Our Network Now
+        </a>
+    </div>
+
+</div> <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('myYearlyChart').getContext('2d');
+        
+        // 1. Get the data as a string from Django
+        const labels_json = '{{ chart_labels_json|safe }}';
+        const data_json = '{{ chart_data_json|safe }}';
+        
+        // 2. Parse the string into a JavaScript array
+        const chartLabels = JSON.parse(labels_json);
+        const chartData = JSON.parse(data_json);
+
+        new Chart(ctx, {
+            type: 'line', // A line chart for "years"
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Repairs Completed',
+                    data: chartData,
+                    backgroundColor: 'rgba(0, 74, 173, 0.1)',
+                    borderColor: 'rgba(0, 74, 173, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.1 // Makes the line smooth
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1 // Only show whole numbers (e.g., 1, 2, 3)
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+            }
+        });
+    });
+</script>
+{% endblock %}

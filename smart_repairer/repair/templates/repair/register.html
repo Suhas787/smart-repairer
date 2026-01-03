@@ -1,0 +1,23 @@
+{% extends 'repair/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="register-container">
+    <h2>Register as</h2>
+    
+    <div class="role-selection">
+        <a href="{% url 'register_driver' %}" class="role-card">
+            <img src="{% static 'images/driver_icon.png' %}" alt="Driver Icon">
+            <h3>Driver</h3>
+            <p>I drive a vehicle and need repair services.</p>
+        </a>
+        
+        <a href="{% url 'register_repairer' %}" class="role-card">
+            <img src="{% static 'images/repairer_icon.png' %}" alt="Repairer Icon">
+            <h3>Repairer</h3>
+            <p>I own a workshop and offer repair services.</p>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

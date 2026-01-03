@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Repairer Network</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/colorful_vehicle_logo.png' %}" alt="Smart Repairer Logo">
+        </div>
+        <nav>
+            {% if user.is_authenticated %}
+                <span class="nav-welcome">Welcome, {{ user.username }}!</span>
+                
+                {% if user.driverprofile %}
+                    <a href="{% url 'driver_dashboard' %}">My Dashboard</a>
+                {% elif user.repairerprofile %}
+                    <a href="{% url 'repairer_dashboard' %}">My Dashboard</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="nav-logout">Logout</a>
+
+            {% else %}
+                <a href="/">Home</a>
+                <a href="/#services">Services</a>
+                <a href="{% url 'work_management_public' %}">Work Management</a>
+                <a href="{% url 'login_as' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+    
+    <footer>
+        <p>© 2025 Smart Repairer Network | Follow us:
+            <a href="#">Facebook</a> |
+            <a href="#">Twitter</a> |
+            <a href="#">Instagram</a>
+        </p>
+    </footer>
+</body>
+</html>

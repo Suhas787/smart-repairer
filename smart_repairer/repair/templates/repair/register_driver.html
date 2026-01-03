@@ -1,0 +1,18 @@
+{% extends 'repair/base.html' %}
+{% block content %}
+<div class="login-container">
+    <h2>Register as a Driver</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="password2" placeholder="Confirm Password" required>
+        <input type="text" name="vehicle_number" placeholder="Vehicle Number" required>
+        <input type="text" name="phone" placeholder="Phone Number" required>
+        <input type="text" name="location" placeholder="Your City/Location" required>
+        <button type="submit" class="btn">Register</button>
+
+        <p class="login-link">Already have an account? <a href="{% url 'login_as' %}">Login here</a></p>
+    </form>
+</div>
+{% endblock %}
